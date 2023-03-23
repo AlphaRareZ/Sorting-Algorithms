@@ -3,10 +3,12 @@
  * Mohamed Sherif --- 20210342
  * Mohamed Alaa Eddin Mostafa --- 20211083
  */
-#include <iostream>
+#include <bits/stdc++.h>
+#include<chrono>
 #include <algorithm>
 #include <ctime>
 using namespace std;
+using namespace std::chrono;
 
 template<typename T>
 // selection sort
@@ -117,22 +119,30 @@ void mergeSort(T arr[], int Lindex, int Rindex) {
     merge(arr, Lindex, middle, Rindex); // merge the final array sorted
 }
 
+void timeTaken(){
+    clock_t tStart = clock();
+    /* Do your stuff here */
+    printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+}
 template<class T>
-void countSort(vector<T> &a) {
+void countSort(T a[],int size) {
     vector<T> v;
     map<T, int> mp;
-    for (auto &i: a)
-        mp[i]++;
+    for(int i = 0;i<size;i++){
+        mp[a[i]]++;
+    }
     for (auto &i: mp) {
         for (int j = 0; j < i.second; j++) {
             v.push_back(i.first);
         }
     }
-    a = v;
+    for (int i = 0; i < v.size(); i++) {
+        a[i] = v[i];
+    }
 }
 
 template<class T>
-int partition(vector<T> &a, int l, int r) {
+int partition(T a[], int l, int r) {
     int pivot = a[r];
     int pivotIndex = r;
     int j = l;
@@ -150,7 +160,7 @@ int partition(vector<T> &a, int l, int r) {
 }
 
 template<class T>
-void quickSort(vector<T> &a, int l, int r) {
+void quickSort(T a[], int l, int r) {
     if (l < r) {
         int p = partition(a, l, r);
         quickSort(a, l, p - 1);
@@ -159,10 +169,10 @@ void quickSort(vector<T> &a, int l, int r) {
 }
 
 template<class T>
-void shellSort(vector<T> &a) {
-    int gap = a.size() / 2;
+void shellSort(T a[], int size) {
+    int gap = size / 2;
     while (gap) {
-        for (int j = gap; j < a.size(); j++) {
+        for (int j = gap; j < size; j++) {
             for (int k = j - gap; k >= 0; k -= gap) {
                 if (a[k + gap] <= a[k])swap(a[k + gap], a[k]);
                 else break;
@@ -172,31 +182,22 @@ void shellSort(vector<T> &a) {
     }
 }
 
-
 //Main function 
 int main() {
-
-    srand(time(nullptr)); // Initialize random seed with current time
-    const int N = 10; // Change N to the desired array size
-
-    int arr[N];
-
-    for (int i = 0; i < N; i++) {
-        arr[i] = rand() % 1000; // Generates a random integer between 0 and 999
+    int arr[50000], i = 0;
+    ifstream input;
+    string filename;
+    cout << "Enter Size of Array (200,500,1000,5000,10000,20000,50000):";
+    cin >> filename;
+    input.open(filename + ".txt");
+    string number;
+    while (input >> number) {
+        arr[i++] = stoi(number);
     }
-    cout<<"unsorted: ";
-    for (int i = 0; i < N; i++) {
-        cout<<arr[i]<<" "; // Generates a random integer between 0 and 999
+    quickSort(arr,0,stoi(filename)-1);
+    for (int i = 0; i < stoi(filename); i++) {
+        cout << arr[i] << ' ';
     }
-    int arrSize = N;
-
-    mergeSort(arr, 0,arrSize - 1);
-    cout<<endl<<"sorted: ";
-    for (int i = 0; i < arrSize; i++) {
-        std::cout << arr[i] << " ";
-    }
-    std::cout << std::endl;
-
-    return 0;
-    }
-
+    cout << "\n\n\n";
+    cerr << "Time elapsed: " << 1.0 * clock() / CLOCKS_PER_SEC << " s.\n";
+}
